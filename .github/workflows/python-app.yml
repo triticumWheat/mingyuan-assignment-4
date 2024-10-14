@@ -26,7 +26,7 @@ jobs:
     - name: Run the Flask server
       run: |
         make run &
-        sleep 60  # Sleep for 10 seconds to allow the server to start
+        sleep 60  
 
     - name: Stop Flask server
       run: |
