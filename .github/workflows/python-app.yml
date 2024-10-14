@@ -1,34 +1,33 @@
-name: Python Flask App CI
+name: test
 
 on:
   push:
-    branches: [ main ] 
+    branches:
+      - main
   pull_request:
-    branches: [ main ]  
-
-permissions:
-  contents: read
+    branches:
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest  
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Check out the code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'  
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
 
-      - name: Install dependencies
-        run: |
-          python -m venv venv  
-          source venv/bin/activate  
-          pip install -r requirements.txt  
+    - name: Install dependencies
+      run: make install
 
-      - name: Run Flask app
-        run: |
-          source venv/bin/activate
-          flask run --host=0.0.0.0 --port=3000
+    - name: Run the Flask server
+      run: |
+        make run &
+        sleep 10  # Sleep for 10 seconds to allow the server to start
+
+    - name: Stop Flask server
+      run: |
+        pkill -f "flask run"
